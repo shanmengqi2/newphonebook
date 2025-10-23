@@ -371,18 +371,16 @@ cd ../phonebook_backend && npm install
 {
   "version": 2,
   "buildCommand": "cd phonebook_frontend && npm install && npm run build && cd ../phonebook_backend && npm install",
-  "outputDirectory": "phonebook_backend",
   "installCommand": "echo 'Dependencies installed in buildCommand'",
-  "devCommand": "cd phonebook_backend && npm run dev",
-  "framework": null,
+  "outputDirectory": "phonebook_backend/public",
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
+      "source": "/api/:path*",
+      "destination": "/api"
     },
     {
-      "source": "/(.*)",
-      "destination": "/"
+      "source": "/info",
+      "destination": "/api"
     }
   ]
 }
@@ -394,13 +392,12 @@ cd ../phonebook_backend && npm install
 - **buildCommand**: 自定义构建命令
   - 先构建前端（输出到`phonebook_backend/public`）
   - 再安装后端依赖
-- **outputDirectory**: 部署的根目录（指向后端目录）
 - **installCommand**: 禁用默认安装命令（在buildCommand中处理）
-- **devCommand**: 本地开发命令
-- **framework**: 设为null，表示不使用预设框架
+- **outputDirectory**: 静态文件目录（指向前端构建产物目录）
 - **rewrites**: 路由重写规则
-  - `/api/*`请求转发到后端API
-  - 其他请求返回前端应用（SPA fallback）
+  - `/api/*`请求转发到后端API无服务器函数
+  - `/info`请求转发到后端API无服务器函数
+  - 其他请求从静态文件提供服务（SPA）
 
 
 ### 2. .github/workflow/pipeline.yml
