@@ -32,6 +32,11 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :f
 
 app.use(express.json())
 
+//test
+app.get('/api/version', (req, res) => {
+  res.send('version1')
+})
+
 //get all persons
 app.get('/api/persons', (req, res) => {
   Contact.find({}).then(contacts => {
