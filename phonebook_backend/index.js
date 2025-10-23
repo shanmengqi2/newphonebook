@@ -1,9 +1,12 @@
 require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
+const path = require('path')
 const app = express()
 const Contact = require('./models/contact')
-app.use(express.static('public'))
+
+// Serve static files from public directory
+app.use(express.static(path.join(__dirname, 'public')))
 
 // morgan.token('body', (req, res) => {
 //   return res.locals.body || ''
@@ -137,13 +140,8 @@ const unknownEndpoint = (request, response, next) => {
 app.use(unknownEndpoint)
 
 // SPA fallback - serve index.html for all non-API routes
-const path = require('path')
-app.use((req, res, next) => {
-  if (req.method === 'GET' && !req.path.startsWith('/api/')) {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'))
-  } else {
-    next()
-  }
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
 
 // error handler
