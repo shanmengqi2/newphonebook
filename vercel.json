@@ -1,13 +1,12 @@
 {
   "version": 2,
-  "buildCommand": "cd phonebook_frontend && npm install && npm run build && cd ../phonebook_backend && npm install",
-  "installCommand": "echo 'Dependencies installed in buildCommand'",
-  "builds": [
-    {
-      "src": "phonebook_backend/index.js",
-      "use": "@vercel/node"
+  "buildCommand": "cd phonebook_frontend && npm install && npm run build && cd .. && ls -la phonebook_backend/public",
+  "installCommand": "cd phonebook_backend && npm install",
+  "functions": {
+    "phonebook_backend/*.js": {
+      "includeFiles": "{phonebook_backend/public/**,phonebook_backend/models/**}"
     }
-  ],
+  },
   "routes": [
     {
       "src": "/api/(.*)",
