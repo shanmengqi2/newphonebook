@@ -6,10 +6,6 @@
     {
       "src": "phonebook_backend/index.js",
       "use": "@vercel/node"
-    },
-    {
-      "src": "phonebook_backend/public/**",
-      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -18,16 +14,8 @@
       "dest": "phonebook_backend/index.js"
     },
     {
-      "src": "/assets/(.*)",
-      "dest": "phonebook_backend/public/assets/$1"
-    },
-    {
-      "src": "/vite.svg",
-      "dest": "phonebook_backend/public/vite.svg"
-    },
-    {
       "src": "/(.*)",
-      "dest": "phonebook_backend/public/index.html"
+      "dest": "phonebook_backend/index.js"
     }
   ]
 }
