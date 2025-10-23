@@ -136,6 +136,12 @@ const unknownEndpoint = (request, response, next) => {
 }
 app.use(unknownEndpoint)
 
+// SPA fallback - serve index.html for all non-API routes
+const path = require('path')
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'))
+})
+
 // error handler
 const errorHandler = (error, request, response, next) => {
   if (error.name === 'CastError') {
