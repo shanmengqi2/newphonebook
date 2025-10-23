@@ -1,21 +1,10 @@
 {
-  "version": 2,
-  "buildCommand": "cd phonebook_frontend && npm install && npm run build && mkdir -p ../phonebook_backend/public && cp -r dist/* ../phonebook_backend/public/",
-  "installCommand": "cd phonebook_backend && npm install",
-  "builds": [
+  "buildCommand": "cd phonebook_frontend && npm install && npm run build && cd ../phonebook_backend && npm install && mkdir -p public && cp -r ../phonebook_frontend/dist/* public/",
+  "installCommand": "echo 'Dependencies installed in buildCommand'",
+  "rewrites": [
     {
-      "src": "phonebook_backend/index.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "phonebook_backend/index.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "phonebook_backend/index.js"
+      "source": "/(.*)",
+      "destination": "/api"
     }
   ]
 }
