@@ -2,11 +2,20 @@ require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const path = require('path')
+const fs = require('fs')
 const app = express()
 const Contact = require('./models/contact')
 
+// Debug: log the public directory path and contents
+const publicPath = path.join(__dirname, 'public')
+console.log('Public directory path:', publicPath)
+console.log('Public directory exists:', fs.existsSync(publicPath))
+if (fs.existsSync(publicPath)) {
+  console.log('Public directory contents:', fs.readdirSync(publicPath))
+}
+
 // Serve static files from public directory
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(publicPath))
 
 // morgan.token('body', (req, res) => {
 //   return res.locals.body || ''

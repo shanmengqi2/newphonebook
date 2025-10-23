@@ -1,0 +1,3 @@
+# Don't ignore the public directory even though it's in .gitignore
+!phonebook_backend/public
+!phonebook_backend/public/**
