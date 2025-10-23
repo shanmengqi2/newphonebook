@@ -2,9 +2,14 @@
   "version": 2,
   "buildCommand": "cd phonebook_frontend && npm install && npm run build && cd ../phonebook_backend && npm install",
   "installCommand": "echo 'Dependencies installed in buildCommand'",
+  "outputDirectory": "phonebook_backend/public",
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/api/:path*",
+      "destination": "/api"
+    },
+    {
+      "source": "/info",
       "destination": "/api"
     }
   ]
