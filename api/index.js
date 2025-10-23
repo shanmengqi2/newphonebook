@@ -1,3 +1,8 @@
 // Vercel serverless function entry point
-// This file re-exports the Express app from phonebook_backend
-module.exports = require('../phonebook_backend/index')
+const app = require('../phonebook_backend/index')
+
+// Vercel expects a function that handles (req, res)
+module.exports = (req, res) => {
+  // Let Express handle the request
+  return app(req, res)
+}
