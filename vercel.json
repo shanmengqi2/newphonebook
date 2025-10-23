@@ -1,24 +1,10 @@
 {
-  "version": 2,
-  "buildCommand": "cd phonebook_frontend && npm install && npm run build && cd .. && ls -la phonebook_backend/public",
-  "installCommand": "cd phonebook_backend && npm install",
-  "functions": {
-    "phonebook_backend/*.js": {
-      "includeFiles": "{phonebook_backend/public/**,phonebook_backend/models/**}"
-    }
-  },
-  "routes": [
+  "buildCommand": "cd phonebook_frontend && npm install && npm run build && cd ../phonebook_backend && npm install",
+  "installCommand": "echo 'Dependencies installed in buildCommand'",
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "phonebook_backend/index.js"
-    },
-    {
-      "src": "/info",
-      "dest": "phonebook_backend/index.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "phonebook_backend/index.js"
+      "source": "/(.*)",
+      "destination": "/api"
     }
   ]
 }
