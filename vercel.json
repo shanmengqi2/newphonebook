@@ -2,11 +2,6 @@
   "version": 2,
   "buildCommand": "cd phonebook_frontend && npm install && npm run build && cd ../phonebook_backend && npm install",
   "installCommand": "echo 'Dependencies installed in buildCommand'",
-  "functions": {
-    "api/*.js": {
-      "runtime": "@vercel/node@3"
-    }
-  },
   "rewrites": [
     {
       "source": "/(.*)",
