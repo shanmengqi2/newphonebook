@@ -6,16 +6,27 @@ const fs = require('fs')
 const app = express()
 const Contact = require('./models/contact')
 
-// Debug: log the public directory path and contents
+// Determine the correct public directory path
+// In Vercel serverless: __dirname is /var/task/phonebook_backend
+// We need to use an absolute path from the project root
 const publicPath = path.join(__dirname, 'public')
+
+// Debug: log the public directory path and contents
+console.log('__dirname:', __dirname)
 console.log('Public directory path:', publicPath)
 console.log('Public directory exists:', fs.existsSync(publicPath))
 if (fs.existsSync(publicPath)) {
   console.log('Public directory contents:', fs.readdirSync(publicPath))
+  const indexPath = path.join(publicPath, 'index.html')
+  console.log('index.html exists:', fs.existsSync(indexPath))
 }
 
 // Serve static files from public directory
-app.use(express.static(publicPath))
+app.use(express.static(publicPath, {
+  index: false,  // Don't automatically serve index.html
+  dotfiles: 'ignore',
+  redirect: false
+}))
 
 // morgan.token('body', (req, res) => {
 //   return res.locals.body || ''
@@ -150,7 +161,16 @@ app.use(unknownEndpoint)
 
 // SPA fallback - serve index.html for all non-API routes
 app.use((req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'))
+  const indexPath = path.join(__dirname, 'public', 'index.html')
+  console.log('SPA fallback triggered for:', req.path)
+  console.log('Serving index.html from:', indexPath)
+  console.log('File exists:', fs.existsSync(indexPath))
+
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath)
+  } else {
+    res.status(404).send('index.html not found at: ' + indexPath)
+  }
 })
 
 // error handler
