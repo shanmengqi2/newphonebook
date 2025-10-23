@@ -1,0 +1,93 @@
+name: Deployment pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  check_skip:
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.check.outputs.should_skip }}
+    steps:
+      - name: Check for #skip in commits
+        id: check
+        run: |
+          COMMITS='${{ toJson(github.event.commits) }}'
+          if echo "$COMMITS" | grep -q "#skip"; then
+            echo "should_skip=true" >> $GITHUB_OUTPUT
+            echo "Found #skip in commit messages, will skip deployment"
+          else
+            echo "should_skip=false" >> $GITHUB_OUTPUT
+            echo "No #skip found, will proceed with deployment"
+          fi
+  simple_deployment_pipeline:
+    needs: check_skip
+    runs-on: ubuntu-latest
+    if: ${{ needs.check_skip.outputs.should_skip != 'true' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            phonebook_frontend/node_modules
+            phonebook_backend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install frontend dependencies
+        run: cd phonebook_frontend && npm ci
+
+      - name: Lint frontend
+        run: cd phonebook_frontend && npm run lint
+
+      - name: Install backend dependencies
+        run: cd phonebook_backend && npm ci
+
+      - name: Lint backend
+        run: cd phonebook_backend && npx eslint .
+
+      - name: Build frontend
+        run: cd phonebook_frontend && npm run build
+
+      - name: Verify build artifacts
+        run: |
+          if [ ! -d "phonebook_backend/public" ]; then
+            echo "Build failed: public directory not found"
+            exit 1
+          fi
+          if [ ! -f "phonebook_backend/public/index.html" ]; then
+            echo "Build failed: index.html not found"
+            exit 1
+          fi
+          echo "Build artifacts verified successfully"
+
+  tag_release:
+    needs: [check_skip, simple_deployment_pipeline]
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.check_skip.outputs.should_skip != 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.75.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch

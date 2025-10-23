@@ -1,0 +1,13 @@
+.vercel
+.env
+dist
+node_modules
+
+# 忽略构建的前端文件（部署时自动生成）
+public/*.html
+public/*.js
+public/*.css
+public/assets/
+public/vite.svg
+# 但保留 .gitkeep 文件
+!public/.gitkeep

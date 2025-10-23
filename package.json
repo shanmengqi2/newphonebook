@@ -1,0 +1,27 @@
+{
+  "name": "phonebook-monorepo",
+  "version": "1.0.0",
+  "description": "Phonebook application monorepo with frontend and backend",
+  "private": true,
+  "scripts": {
+    "install:frontend": "cd phonebook_frontend && npm install",
+    "install:backend": "cd phonebook_backend && npm install",
+    "install:all": "npm run install:frontend && npm run install:backend",
+    "lint:frontend": "cd phonebook_frontend && npm run lint",
+    "lint:backend": "cd phonebook_backend && npx eslint .",
+    "lint": "npm run lint:frontend && npm run lint:backend",
+    "build:frontend": "cd phonebook_frontend && npm run build",
+    "dev:frontend": "cd phonebook_frontend && npm run dev",
+    "dev:backend": "cd phonebook_backend && npm run dev",
+    "start:backend": "cd phonebook_backend && npm start"
+  },
+  "keywords": [
+    "monorepo",
+    "phonebook",
+    "react",
+    "express",
+    "nodejs"
+  ],
+  "author": "SHAN MENGQI",
+  "license": "MIT"
+}
